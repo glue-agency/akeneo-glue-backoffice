@@ -1,0 +1,48 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }} · Symfony ${{ matrix.symfony }} · ${{ matrix.dependencies }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Akeneo 5.0, the oldest the package allows: Symfony 4.4 on PHP 7.4, each dependency at its lowest.
+          - { php: '7.4', symfony: '4.4.*', dependencies: 'prefer-lowest' }
+          - { php: '7.4', symfony: '4.4.*', dependencies: 'prefer-stable' }
+          # Akeneo 7.0.
+          - { php: '8.1', symfony: '5.4.*', dependencies: 'prefer-stable' }
+          # Akeneo 2026.x.
+          - { php: '8.3', symfony: '5.4.*', dependencies: 'prefer-stable' }
+          # What a later Akeneo may move to.
+          - { php: '8.3', symfony: '6.4.*', dependencies: 'prefer-stable' }
+          - { php: '8.4', symfony: '7.*', dependencies: 'prefer-stable' }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, json
+          coverage: none
+          tools: composer:v2
+
+      # Symfony 4.4 carries security advisories, and the PIMs this reports for
+      # still run it: the old releases have to install here.
+      - name: Let the advisories through
+        run: composer config audit.block-insecure false || true
+
+      - name: Install
+        run: |
+          composer require "symfony/config:${{ matrix.symfony }}" "symfony/console:${{ matrix.symfony }}" "symfony/dependency-injection:${{ matrix.symfony }}" "symfony/http-kernel:${{ matrix.symfony }}" --no-interaction --no-update
+          composer update --${{ matrix.dependencies }} --prefer-dist --no-interaction --no-progress
+
+      - name: Test
+        run: vendor/bin/phpunit

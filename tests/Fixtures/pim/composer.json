@@ -1,0 +1,14 @@
+{
+    "name": "glue-agency/woody-pim",
+    "description": "A PIM as the reporter reads it",
+    "require": {
+        "php": "^7.4|^8.0",
+        "ext-intl": "*",
+        "akeneo/pim-community-dev": "^7.0.0",
+        "symfony/console": "^4.4|^5.4",
+        "glue-agency/not-installed": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    }
+}
