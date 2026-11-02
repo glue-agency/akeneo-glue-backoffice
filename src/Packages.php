@@ -66,14 +66,20 @@ class Packages
      */
     public function installedVersion(string $name): ?string
     {
-        try {
-            $version = InstalledVersions::isInstalled($name) ? InstalledVersions::getPrettyVersion($name) : null;
-        } catch (Throwable $e) {
-            // Not installed as far as Composer knows.
-            return null;
+        if ($this->hasRuntimeApi()) {
+            try {
+                $version = InstalledVersions::isInstalled($name) ? InstalledVersions::getPrettyVersion($name) : null;
+            } catch (Throwable $e) {
+                // Not installed as far as Composer knows.
+                return null;
+            }
+
+            return $version ? (string) $version : null;
         }
 
-        return $version ? (string) $version : null;
+        $version = $this->installed()[$name]['version'] ?? null;
+
+        return $version === null ? null : (string) $version;
     }
 
     /**
@@ -87,8 +93,19 @@ class Packages
     }
 
     /**
-     * Composer's own record of what it installed, by name, for descriptions:
-     * the installed.json beside InstalledVersions.
+     * Whether the PIM was installed by Composer 2, which writes
+     * InstalledVersions. A host may still run Composer 1 on Akeneo 5.0, as
+     * Brooklyn's does, and Composer 1 only leaves its installed.json.
+     */
+    protected function hasRuntimeApi(): bool
+    {
+        return class_exists(InstalledVersions::class);
+    }
+
+    /**
+     * Composer's own record of what it installed, by name: beside
+     * InstalledVersions with Composer 2, in the PIM's vendor with Composer 1,
+     * where it is a plain list rather than Composer 2's `packages`.
      *
      * @return array<string, array<string, mixed>>
      */
@@ -98,7 +115,11 @@ class Packages
             return $this->installed;
         }
 
-        $data = self::readJson(dirname((string) (new ReflectionClass(InstalledVersions::class))->getFileName()) . '/installed.json');
+        $file = $this->hasRuntimeApi()
+            ? dirname((string) (new ReflectionClass(InstalledVersions::class))->getFileName()) . '/installed.json'
+            : $this->root . '/vendor/composer/installed.json';
+
+        $data = self::readJson($file);
         $packages = $data['packages'] ?? $data;
         $this->installed = [];
 

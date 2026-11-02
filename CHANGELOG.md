@@ -1,5 +1,8 @@
 # Release Notes
 
+## 1.0.1
+- Install and report on a host that still deploys with Composer 1: 1.0.0 required Composer 2 and failed the deploy at `composer install`
+
 ## 1.0.0 - Initial release
 - Report an Akeneo PIM to the Glue Dashboard after each deploy: the host it is served on, its Akeneo version and edition, its PHP version, and the Composer packages it requires directly
 - `--dry-run` prints the report without sending it

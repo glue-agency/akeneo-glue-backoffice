@@ -1,0 +1,10 @@
+{
+    "name": "glue-agency/brooklyn-pim",
+    "description": "A PIM Composer 1 installed, as the reporter reads it",
+    "require": {
+        "php": "7.4.*",
+        "akeneo/pim-community-dev": "^5.0.0",
+        "aws/aws-sdk-php": "v3.172.0",
+        "glue-agency/akeneo-glue-backoffice": "^1.0"
+    }
+}

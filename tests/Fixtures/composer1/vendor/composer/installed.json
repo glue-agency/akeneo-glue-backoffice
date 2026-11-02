@@ -1,0 +1,23 @@
+[
+    {
+        "name": "akeneo/pim-community-dev",
+        "version": "v5.0.75",
+        "version_normalized": "5.0.75.0",
+        "type": "project",
+        "description": "Akeneo PIM, the future of catalog management is open!"
+    },
+    {
+        "name": "aws/aws-sdk-php",
+        "version": "3.172.0",
+        "version_normalized": "3.172.0.0",
+        "type": "library",
+        "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project"
+    },
+    {
+        "name": "glue-agency/akeneo-glue-backoffice",
+        "version": "1.0.1",
+        "version_normalized": "1.0.1.0",
+        "type": "symfony-bundle",
+        "description": "Reports an Akeneo PIM to the Glue Dashboard after each deploy"
+    }
+]

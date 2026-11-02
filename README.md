@@ -12,7 +12,7 @@ Symfony Flex adds the bundle to `config/bundles.php` on its own. Without Flex, o
 GlueAgency\Backoffice\GlueBackofficeBundle::class => ['all' => true],
 ```
 
-Requires Akeneo 5.0 or later (Symfony 4.4 or later, PHP 7.4 or later, Composer 2) and PHP's curl extension, which Akeneo already requires.
+Requires Akeneo 5.0 or later (Symfony 4.4 or later, PHP 7.4 or later) and PHP's curl extension, which Akeneo already requires. It installs and reports with Composer 1 as well as 2: some Akeneo 5.0 hosts still deploy with Composer 1.
 
 ## Configuration
 
